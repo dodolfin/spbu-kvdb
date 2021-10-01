@@ -1,6 +1,7 @@
 import com.github.ajalt.clikt.core.CliktCommand
 import java.io.File
 import CommandType.*
+import com.github.ajalt.clikt.parameters.arguments.*
 
 /**
  * Stores all possible types of commands that are recognizable. [text] is how each command is invoked
@@ -28,8 +29,9 @@ enum class CommandType(val text: String,
  * A class that represents the app. Clikt library magic.
  */
 class KVDB: CliktCommand() {
+    val databaseToOpen by argument().optional()
     override fun run() {
-        mainLoop()
+        mainLoop(databaseToOpen)
     }
 }
 
@@ -129,11 +131,13 @@ fun databaseDeleteOutput(key: String, value: String?) {
  * 3) printing error message if the input was incorrect or performing action in accordance with input
  * 4) go to 1
  *
- * TODO: If the name of the file was provided as program argument, open the database at once
  * TODO: Quiet output mode
  */
-fun mainLoop() {
+fun mainLoop(databaseToOpen: String?) {
     var openedDatabase: Database? = null
+    if (databaseToOpen != null) {
+        openedDatabase = openDatabase(databaseToOpen)
+    }
 
     var inputString: String?
 
