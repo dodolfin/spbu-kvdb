@@ -142,6 +142,7 @@ fun mainLoop() {
         inputString = readLine()?.trim()
 
         if (inputString == null) {
+            openedDatabase?.save()
             break
         }
 
