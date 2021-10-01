@@ -29,9 +29,9 @@ enum class CommandType(val text: String,
 /**
  * A class that represents the app. Clikt library magic.
  */
-class KVDB: CliktCommand() {
-    val databaseToOpen by argument().optional()
-    val quietOutputMode by option("-q", "--quiet").flag()
+class KVDB: CliktCommand(help = "Simple database management system. Can work in interactive mode or perform commands from file.\n(Use < and -q to redirect input to file with commands)") {
+    val databaseToOpen by argument(help = "If some path is present, tries to read database from the file at this path.").optional()
+    val quietOutputMode by option("-q", "--quiet", help = "Disables input prompt (\"...> \"). Strongly recommended when redirecting input.").flag()
     override fun run() {
         mainLoop(databaseToOpen, quietOutputMode)
     }
