@@ -4,6 +4,18 @@ import java.io.PrintStream
 import kotlin.test.*
 
 internal class DatabaseTests {
+    val numbersDB = Database(File("data/numbers.json"), mutableMapOf(
+        "one" to "1",
+        "two" to "2",
+        "three" to "3"
+    ))
+
+    val oneEntryDB = Database(File("data/one_entry.json"), mutableMapOf(
+        "key" to "value"
+    ))
+
+    val emptyDB = Database(File("data/empty.json"), mutableMapOf())
+
     private val standardOut = System.out
     private val stream = ByteArrayOutputStream()
 
@@ -71,5 +83,35 @@ internal class DatabaseTests {
             "[r13314830]" to "Aphex Twin \u2013 Selected Ambient Works 85-92"
         )
         assertEquals(Database(fileObject, musicDB), openDatabase(fileObject.path))
+    }
+
+    @Test
+    fun moveToTestToExistingFile() {
+        val tempFile = File("data/temp.json")
+        if (!tempFile.exists()) {
+            tempFile.createNewFile()
+        }
+        tempFile.printWriter().use { it.println("temporary information") }
+
+        oneEntryDB.moveTo("data/temp.json")
+
+        assertEquals(tempFile.absolutePath, oneEntryDB.fileObject.absolutePath)
+
+        tempFile.delete()
+    }
+
+    @Test
+    fun moveToTestToNonexistentFile() {
+        val tempFile = File("data/temp.json")
+        if (tempFile.exists()) {
+            tempFile.delete()
+        }
+
+        oneEntryDB.moveTo("data/temp.json")
+
+        assertEquals(tempFile.absolutePath, oneEntryDB.fileObject.absolutePath)
+        assertTrue(tempFile.exists())
+
+        tempFile.delete()
     }
 }
