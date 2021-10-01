@@ -1,0 +1,15 @@
+help
+new data/numbers.json
+store one 1
+store two 2
+store three 3
+list
+store four 4
+list
+delete key
+delete key
+command
+delete
+list
+close
+quit
