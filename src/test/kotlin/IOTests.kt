@@ -34,20 +34,26 @@ internal class IOTests {
 
     @Test
     fun printPromptTestOpenedDatabaseInSameDirectory() {
-        printPrompt(Database(File("db.json"), mutableMapOf()))
+        printPrompt(Database(File("db.json"), mutableMapOf()), false)
         assertEquals("db.json> ", stream.toString())
     }
 
     @Test
     fun printPromptTestOpenedDatabaseInAnotherDirectory() {
-        printPrompt(Database(File("dir1/dir2/db.json"), mutableMapOf()))
+        printPrompt(Database(File("dir1/dir2/db.json"), mutableMapOf()), false)
         assertEquals("db.json> ", stream.toString())
     }
 
     @Test
     fun printPromptTestNoDatabaseOpened() {
-        printPrompt(null)
+        printPrompt(null, false)
         assertEquals("> ", stream.toString())
+    }
+
+    @Test
+    fun printPromptTestQuietModeIsOn() {
+        printPrompt(Database(File("db.json"), mutableMapOf()), true)
+        assertEquals("", stream.toString())
     }
 
     @Test
