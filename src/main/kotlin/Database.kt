@@ -15,7 +15,12 @@ data class Database(var fileObject: File, val database: MutableMap<String, Strin
     fun moveTo(newFilename: String = fileObject.name) {
         val newFile = File(newFilename)
         if (!newFile.exists()) {
-            newFile.createNewFile()
+            try {
+                newFile.createNewFile()
+            } catch (exception: Exception) {
+                println("Couldn't create file.")
+                return
+            }
         }
 
         if (!checkFile(newFile)) {
