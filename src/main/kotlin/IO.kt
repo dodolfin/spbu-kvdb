@@ -7,18 +7,21 @@ import CommandType.*
  * through command-line. [requiredArgumentsCnt] is the number of arguments this command requires. [requiresDatabase] is
  * true if the command involves interaction with database; false otherwise.
  */
-enum class CommandType(val text: String, val requiredArgumentsCnt: Int, val requiresDatabase: Boolean = true) {
-    OPEN("open", 1, false),
-    NEW("new", 1, false),
-    STORE("store", 2),
-    GET("get", 1),
-    LIST("list", 0),
-    DELETE("delete", 1),
-    SAVE("save", 0),
-    MOVE("move", 1),
-    CLOSE("close", 0),
-    HELP("help", 0, false),
-    QUIT("quit", 0, false)
+enum class CommandType(val text: String,
+                       val requiredArgumentsCnt: Int,
+                       val requiresDatabase: Boolean = true,
+                       val helpString: String) {
+    OPEN("open", 1, false, "Open database from file located at [ARG1]"),
+    NEW("new", 1, false, "Create empty database at [ARG1]"),
+    STORE("store", 2, true, "Assign value [ARG2] to [ARG1] key (if either argument contains spaces, use \"\")"),
+    GET("get", 1, true, "Get value assigned to [ARG1] key (if key contains spaces, use \"\")"),
+    LIST("list", 0, true, "Print all the key value pairs in the database"),
+    DELETE("delete", 1, true, "Get value assigned to [ARG1] key (if key contains spaces, use \"\")"),
+    SAVE("save", 0, true, "Save database to the file"),
+    MOVE("move", 1, true, "Change the destination of saving to [ARG1]. If file exists at [ARG1], save will overwrite it. Otherwise, a new file will be created"),
+    CLOSE("close", 0, true, "Save and close database"),
+    HELP("help", 0, false, "Print this help"),
+    QUIT("quit", 0, false, "Save the database (if opened) and quit the program")
 }
 
 /**
@@ -71,7 +74,10 @@ fun parseCommand(inputString: String): List<String> {
  * Prints help, which contains information about all possible commands.
  */
 fun showHelp() {
-    TODO()
+    CommandType.values().forEach { command ->
+        val arguments = List(command.requiredArgumentsCnt) { "[ARG${it + 1}]" }
+        println("${command.text} ${arguments.joinToString(" ", postfix = if (arguments.isNotEmpty()) " " else "")}- ${command.helpString}")
+    }
 }
 
 /**
