@@ -2,6 +2,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import java.io.File
 import CommandType.*
 import com.github.ajalt.clikt.parameters.arguments.*
+import com.github.ajalt.clikt.parameters.options.*
 
 /**
  * Stores all possible types of commands that are recognizable. [text] is how each command is invoked
@@ -30,8 +31,9 @@ enum class CommandType(val text: String,
  */
 class KVDB: CliktCommand() {
     val databaseToOpen by argument().optional()
+    val quietOutputMode by option("-q", "--quiet").flag()
     override fun run() {
-        mainLoop(databaseToOpen)
+        mainLoop(databaseToOpen, quietOutputMode)
     }
 }
 
@@ -59,9 +61,11 @@ fun checkFile(fileObject: File): Boolean {
  * Prints nice input prompt: "DB> ", where DB is the name of the file opened if [openedDatabase] is not null
  * and empty otherwise.
  */
-fun printPrompt(openedDatabase: Database?) {
-    val inputPrompt = if (openedDatabase != null) openedDatabase.fileObject.name else ""
-    print("$inputPrompt> ")
+fun printPrompt(openedDatabase: Database?, quietOutputMode: Boolean) {
+    if (!quietOutputMode) {
+        val inputPrompt = if (openedDatabase != null) openedDatabase.fileObject.name else ""
+        print("$inputPrompt> ")
+    }
 }
 
 /**
@@ -130,10 +134,8 @@ fun databaseDeleteOutput(key: String, value: String?) {
  * 2) getting input from user
  * 3) printing error message if the input was incorrect or performing action in accordance with input
  * 4) go to 1
- *
- * TODO: Quiet output mode
  */
-fun mainLoop(databaseToOpen: String?) {
+fun mainLoop(databaseToOpen: String?, quietOutputMode: Boolean) {
     var openedDatabase: Database? = null
     if (databaseToOpen != null) {
         openedDatabase = openDatabase(databaseToOpen)
@@ -142,7 +144,7 @@ fun mainLoop(databaseToOpen: String?) {
     var inputString: String?
 
     do {
-        printPrompt(openedDatabase)
+        printPrompt(openedDatabase, quietOutputMode)
         inputString = readLine()?.trim()
 
         if (inputString == null) {
