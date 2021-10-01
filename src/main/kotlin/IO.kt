@@ -93,6 +93,36 @@ fun getCommandType(command: String?): CommandType? {
 }
 
 /**
+ * Prints the [value] which is assigned to [key]. If [value] is null then the [key] is not in the database and user
+ * must be warned.
+ */
+fun databaseGetOutput(key: String, value: String?) {
+    println(if (value == null) {
+        "There is no $key key in the database."
+    } else {
+        "$value"
+    })
+}
+
+/**
+ * Prints all content of the [database] in ""KEY": "VALUE"" format.
+ */
+fun databaseListOutput(database: MutableMap<String, String>) {
+    database.forEach { (key, value) ->
+        println("\"$key\": \"$value\"")
+    }
+}
+
+/**
+ * If the [value] is null then [key] wasn't found in the database and user must be warned.
+ */
+fun databaseDeleteOutput(key: String, value: String?) {
+    if (value == null) {
+        println("There is no $key key in the database.")
+    }
+}
+
+/**
  * The main loop, which includes
  * 1) printing an input prompt
  * 2) getting input from user
@@ -100,7 +130,6 @@ fun getCommandType(command: String?): CommandType? {
  * 4) go to 1
  *
  * TODO: If the name of the file was provided as program argument, open the database at once
- * TODO: Don't print input prompt if file is provided as input (e.g. user wrote some script for automation)
  * TODO: Quiet output mode
  */
 fun mainLoop() {
@@ -127,10 +156,6 @@ fun mainLoop() {
             println("Too few arguments (required ${commandType.requiredArgumentsCnt}; got ${parsedCommand.size - 1}).")
             continue
         }
-        if (commandType.requiresDatabase && openedDatabase == null) {
-            println("Please open the database with \"open <PATH_TO_DATABASE>\" or create new with \"new <PATH_TO_DATABASE>\".")
-            continue
-        }
 
         when (commandType) {
             OPEN -> {
@@ -141,18 +166,31 @@ fun mainLoop() {
                 openedDatabase?.save()
                 openedDatabase = createDatabase(parsedCommand[1]) ?: openedDatabase
             }
-            STORE -> openedDatabase?.store(parsedCommand[1], parsedCommand[2])
-            GET -> openedDatabase?.get(parsedCommand[1])
-            LIST -> openedDatabase?.list()
-            DELETE -> openedDatabase?.delete(parsedCommand[1])
-            SAVE -> openedDatabase?.save()
-            MOVE -> openedDatabase?.moveTo(parsedCommand[1])
-            CLOSE -> {
+            HELP -> showHelp()
+            QUIT -> {
                 openedDatabase?.save()
+                return
+            }
+            else -> if (openedDatabase == null) {
+                println("Please open the database with \"open <PATH_TO_DATABASE>\" or create new with \"new <PATH_TO_DATABASE>\".")
+            }
+        }
+
+        if (openedDatabase == null || !commandType.requiresDatabase) {
+            continue
+        }
+
+        when (commandType) {
+            STORE -> openedDatabase.database.set(parsedCommand[1], parsedCommand[2])
+            GET -> databaseGetOutput(parsedCommand[1], openedDatabase.database[parsedCommand[1]])
+            LIST -> databaseListOutput(openedDatabase.database)
+            DELETE -> databaseDeleteOutput(parsedCommand[1], openedDatabase.database.remove(parsedCommand[1]))
+            SAVE -> openedDatabase.save()
+            MOVE -> openedDatabase.moveTo(parsedCommand[1])
+            CLOSE -> {
+                openedDatabase.save()
                 openedDatabase = null
             }
-            HELP -> showHelp()
-            QUIT -> return
         }
     } while (inputString != null)
 }

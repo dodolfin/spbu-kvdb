@@ -10,44 +10,6 @@ import java.io.File
  */
 data class Database(var fileObject: File, val database: MutableMap<String, String>) {
     /**
-     * Assigns [value] to the [key]. Note that the previous value (if present) is overwritten.
-     */
-    fun store(key: String, value: String) {
-        database[key] = value
-    }
-
-    /**
-     * Prints the value which is assigned to [key] or warns user if there is no such [key] in the database.
-     */
-    fun get(key: String) {
-        val value = database[key]
-
-        println(if (value == null) {
-            "There is no $key key in the database."
-        } else {
-            "$value"
-        })
-    }
-
-    /**
-     * Prints all content of the database in ""KEY": "VALUE"" format.
-     */
-    fun list() {
-        database.forEach { (key, value) ->
-            println("\"$key\": \"$value\"")
-        }
-    }
-
-    /**
-     * Deletes the [key]-value pair or warns user if there is no such [key] in the database.
-     */
-    fun delete(key: String) {
-        if (database.remove(key) == null) {
-            println("There is no $key key in the database.")
-        }
-    }
-
-    /**
      * Changes the saving destination to [newFilename].
      *
      * FIXME: If the new saving destination doesn't exist, moveTo doesn't create it
