@@ -4,17 +4,9 @@ import java.io.PrintStream
 import kotlin.test.*
 
 internal class DatabaseTests {
-    val numbersDB = Database(File("data/numbers.json"), mutableMapOf(
-        "one" to "1",
-        "two" to "2",
-        "three" to "3"
-    ))
-
     val oneEntryDB = Database(File("data/one_entry.json"), mutableMapOf(
         "key" to "value"
     ))
-
-    val emptyDB = Database(File("data/empty.json"), mutableMapOf())
 
     private val standardOut = System.out
     private val stream = ByteArrayOutputStream()
