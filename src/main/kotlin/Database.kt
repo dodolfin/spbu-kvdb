@@ -11,11 +11,13 @@ import java.io.File
 data class Database(var fileObject: File, val database: MutableMap<String, String>) {
     /**
      * Changes the saving destination to [newFilename].
-     *
-     * FIXME: If the new saving destination doesn't exist, moveTo doesn't create it
      */
     fun moveTo(newFilename: String = fileObject.name) {
         val newFile = File(newFilename)
+        if (!newFile.exists()) {
+            newFile.createNewFile()
+        }
+
         if (!checkFile(newFile)) {
             return
         }
