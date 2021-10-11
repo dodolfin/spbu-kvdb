@@ -73,7 +73,7 @@ fun printPrompt(openedDatabase: Database?, quietOutputMode: Boolean) {
  * spaces or does not contain them. The latter type of token should be enclosed in double quotes ("") in [inputString].
  */
 fun parseCommand(inputString: String): List<String> {
-    return Regex("[^\\s\\t\"]+|\"[^\"]+\"").findAll(inputString).map { it.value.replace("\"", "") }.toList()
+    return Regex("[^\\s\\t\"]+|\"[^\"]*\"").findAll(inputString).map { it.value.replace("\"", "") }.toList()
 }
 
 /**
