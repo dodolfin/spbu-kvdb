@@ -63,7 +63,7 @@ fun checkFile(fileObject: File): Boolean {
  */
 fun printPrompt(openedDatabase: Database?, quietOutputMode: Boolean) {
     if (!quietOutputMode) {
-        val inputPrompt = if (openedDatabase != null) openedDatabase.fileObject.name else ""
+        val inputPrompt = openedDatabase?.fileObject?.name ?: ""
         print("$inputPrompt> ")
     }
 }
@@ -91,10 +91,6 @@ fun showHelp() {
  * Otherwise, returns the type of the command.
  */
 fun getCommandType(command: String?): CommandType? {
-    if (command == null) {
-        return null
-    }
-
     return CommandType.values().find { it.text == command }
 }
 
@@ -103,11 +99,7 @@ fun getCommandType(command: String?): CommandType? {
  * must be warned.
  */
 fun databaseGetOutput(key: String, value: String?) {
-    println(if (value == null) {
-        "There is no $key key in the database."
-    } else {
-        "$value"
-    })
+    println(value ?: "There is no $key key in the database.")
 }
 
 /**
@@ -188,7 +180,7 @@ fun mainLoop(databaseToOpen: String?, quietOutputMode: Boolean) {
         }
 
         when (commandType) {
-            STORE -> openedDatabase.database.set(parsedCommand[1], parsedCommand[2])
+            STORE -> openedDatabase.database[parsedCommand[1]] = parsedCommand[2]
             GET -> databaseGetOutput(parsedCommand[1], openedDatabase.database[parsedCommand[1]])
             LIST -> databaseListOutput(openedDatabase.database)
             DELETE -> databaseDeleteOutput(parsedCommand[1], openedDatabase.database.remove(parsedCommand[1]))
