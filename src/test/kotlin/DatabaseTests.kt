@@ -4,7 +4,7 @@ import java.io.PrintStream
 import kotlin.test.*
 
 internal class DatabaseTests {
-    val oneEntryDB = Database(File("data/one_entry.json"), mutableMapOf(
+    val oneEntryDB = Database(File("test_dbs/one_entry.json"), mutableMapOf(
         "key" to "value"
     ))
 
@@ -35,7 +35,7 @@ internal class DatabaseTests {
 
     @Test
     fun createDatabaseTestDBInNormalDirectory() {
-        val fileObject = File("data/test.json")
+        val fileObject = File("test_dbs/test.json")
 
         if (fileObject.exists()) {
             fileObject.delete()
@@ -55,7 +55,7 @@ internal class DatabaseTests {
 
     @Test
     fun openDatabaseTestEmptyDB() {
-        val fileObject = File("data/empty.json")
+        val fileObject = File("test_dbs/empty.json")
         assertEquals(Database(fileObject, mutableMapOf()), openDatabase(fileObject.path))
     }
 
@@ -67,7 +67,7 @@ internal class DatabaseTests {
 
     @Test
     fun openDatabaseTestNormalDB() {
-        val fileObject = File("data/music.json")
+        val fileObject = File("test_dbs/music.json")
         val musicDB = mutableMapOf(
             "[m801496]" to "C418 \u2013 Minecraft - Volume Alpha",
             "[r2427020]" to "Mass Of The Fermenting Dregs \u2013 Mass Of The Fermenting Dregs",
@@ -79,13 +79,13 @@ internal class DatabaseTests {
 
     @Test
     fun moveToTestToExistingFile() {
-        val tempFile = File("data/temp.json")
+        val tempFile = File("test_dbs/temp.json")
         if (!tempFile.exists()) {
             tempFile.createNewFile()
         }
         tempFile.printWriter().use { it.println("temporary information") }
 
-        oneEntryDB.moveTo("data/temp.json")
+        oneEntryDB.moveTo("test_dbs/temp.json")
 
         assertEquals(tempFile.absolutePath, oneEntryDB.fileObject.absolutePath)
 
@@ -94,12 +94,12 @@ internal class DatabaseTests {
 
     @Test
     fun moveToTestToNonexistentFile() {
-        val tempFile = File("data/temp.json")
+        val tempFile = File("test_dbs/temp.json")
         if (tempFile.exists()) {
             tempFile.delete()
         }
 
-        oneEntryDB.moveTo("data/temp.json")
+        oneEntryDB.moveTo("test_dbs/temp.json")
 
         assertEquals(tempFile.absolutePath, oneEntryDB.fileObject.absolutePath)
         assertTrue(tempFile.exists())
