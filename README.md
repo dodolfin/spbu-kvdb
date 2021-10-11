@@ -4,7 +4,7 @@
 [Постановка задачи](./TASK.md)
 
 ### Usage
-`dist/bin/pf-2021-kvdb [OPTIONS] [DATABASETOOPEN]` (run from root directory)
+`distribution/bin/pf-2021-kvdb [OPTIONS] [DATABASETOOPEN]` (run from root directory)
 
 Console utility kvdb provides command-line interface to work with simple key-value
 database (which internally is JSON).
