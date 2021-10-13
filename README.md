@@ -47,12 +47,13 @@ Use `-h` or `--help` option to get information about OPTIONS and DATABASETOOPEN.
 shell to show list of available commands.
 
 ### Testing
-Run `./test.sh script.txt` to run a simple script (saved in `script.txt`) that contains few operations with database.
-There is also `big_script.txt`, that contains 1000 operations with database:
+All files related to external testing are now in an `ext_tests` directory.
+Run `ext_tests/test.sh script.txt` to run a simple script (saved in `ext_tests/script.txt`) that contains few operations with database.
+There is also `ext_tests/big_script.txt`, that contains 1000 operations with database:
 1) create a new database, 
 2) insert a key and value, 
 3) close database, 
 4) reopen it, 
 5) repeat from 2
 
-This script is generated with `gen_big_script.sh 1000`. Use `./test.sh big_script.txt` to run it and see the time of execution.
+This script is generated with `ext_tests/gen_big_script.sh 1000`. Use `ext_tests/test.sh big_script.txt` to run it and see the time of execution.
