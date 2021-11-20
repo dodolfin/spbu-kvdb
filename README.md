@@ -1,7 +1,8 @@
-# Курс основ программирования на МКН СПбГУ
-## Проект 2: key-value база данных
+# Programming Fundamentals course. Mathematics and Computer Science Faculty at SPbU
 
-[Постановка задачи](./TASK.md)
+## Project #2: Key-Value Database
+
+[Task (in Russian)](./TASK.md)
 
 ### Usage
 `distribution/bin/pf-2021-kvdb [OPTIONS] [DATABASETOOPEN]` (run from root directory)
